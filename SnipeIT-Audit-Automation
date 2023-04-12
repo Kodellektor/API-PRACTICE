@@ -1,0 +1,39 @@
+#working code for finding assets from name as registered in SnipeIT
+#import necessary modules to accept requests and read json files
+
+import requests
+from requests.exceptions import HTTPError 
+import json
+
+url_id = "https://urldefense.com/v3/__https://ucsdlibrary.snipe-it.io/api/v1/users?search=DESIREDNAMEHERE; " #replace DESIREDNAMEHERE with desired name for user
+
+headers = {
+    "accept": "application/json",
+    "Authorization": "API KEY HERE" #Replace API KEY HERE with authorized API Key 
+}
+
+response = requests.get(url_id, headers=headers)
+response.raise_for_status()
+
+userid = json.loads(response.text)
+userid = str((userid['rows'][0]['id']))
+
+# get a list of the user's Assets
+url_assets = "https://urldefense.com/v3/__https://ucsdlibrary.snipe-it.io/api/v1/users/*22*userid**A22/assets__;JSsrJQ!!Mih3wA!BDLC2p8YtRxWdcQM53jkY1fY3IQ4ecXPBNbb6m0cOFQTbQbAq64G-B16X8d8wVnEoyne7PTvphsyu_NIeOpVlzrM-Dk_$ "
+assets = requests.get(url_assets, headers=headers)
+assets.raise_for_status()
+jsonAssets = assets.json()
+#print(jsonAssets)
+
+z = json.loads(json.dumps(jsonAssets))
+a = z['rows']
+
+#These varibles can be changed in the model ' X : ' + a[i]['X']+"," for rows in SnipeIt
+i = 0
+for i in range(len(a)):
+    for v in a[i].values():
+        print('Asset Tag: ' + a[i]['asset_tag']+",",
+        "Model: " + a[i]['model']['name'] + ",",
+        "Category: " + a[i]['category']['name']
+        )
+        i = i+1
